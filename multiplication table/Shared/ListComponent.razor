@@ -1,0 +1,34 @@
+﻿
+
+ 
+    <div style="height: 200px; overflow-y: scroll; overflow-x:hidden;">
+        <div class="row">
+            <div class="col">
+                @foreach (string z in Zlist)
+                {
+                    <div class="row">
+                        <div class="col h4 text-success">
+                            @z
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col">
+                @foreach (string n in Nlist)
+                {
+                    <div class="row">
+                        <div class="col h4 text-danger">
+                            @n
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+@code {
+    [Parameter]
+    public List<string> Zlist { get; set; }
+
+    [Parameter]
+    public List<string> Nlist { get; set; }
+}

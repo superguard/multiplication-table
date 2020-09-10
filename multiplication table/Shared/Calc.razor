@@ -1,0 +1,442 @@
+﻿@using System
+
+    <div class="container">
+        <p class="h6 text-muted font-weight-bold font-italic d-none d-sm-block">Профессору Звёздочкину нужны Знайки, со знанием таблицы умножения...</p>
+        <div class="row">
+            <div class="col">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <span class="h3 text-black-50">
+                                    А сколько будет:
+                                </span>
+
+                                <br />
+
+                                <span class="h2 text-primary"><strong>@Vopros</strong> <span class="text-black-50">?</span></span>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix">&nbsp;</div>
+
+                <div class="row">
+                    <div class="col">
+                        <span class="h5 text-success align-middle">Ваш ответ:</span>
+
+
+                    </div>
+
+                    <div class="col">
+
+                        <span class="h4 align-middle">@Otvet</span>
+
+                    </div>
+
+
+
+                </div>
+            </div>
+
+            <div class="col-3">
+                <div>
+                    <span class="text-success float-left">@ZnaykaScore</span>
+                    <span class="text-muted float-left"> : </span>
+                    <span class="text-danger float-left">@NeznaykaScore</span>
+                    <a @onclick="ShowClearModal">
+                        <img src="/neznayka/xz_small.gif" class="img-fluid mx-auto" />
+                    </a>
+
+                </div>
+                <div class="d-block d-sm-none">
+                    <button type="button" class="@OtvetClassMd" @onclick="CheckOtvet">Ответить</button>
+                </div>
+            </div>
+        </div>
+
+
+        @*Кнопки*@
+
+        <div class="clearfix">&nbsp;</div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <NumButton Numb="1" OnClickCallback="@AddToOtvet" />
+                </div>
+                <div class="col">
+                    <NumButton Numb="2" OnClickCallback="@AddToOtvet" />
+                </div>
+                <div class="col">
+                    <NumButton Numb="3" OnClickCallback="@AddToOtvet" />
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix">&nbsp;</div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <NumButton Numb="4" OnClickCallback="@AddToOtvet" />
+                </div>
+                <div class="col">
+                    <NumButton Numb="5" OnClickCallback="@AddToOtvet" />
+                </div>
+                <div class="col">
+                    <NumButton Numb="6" OnClickCallback="@AddToOtvet" />
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix">&nbsp;</div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <NumButton Numb="7" OnClickCallback="@AddToOtvet" />
+                </div>
+                <div class="col">
+                    <NumButton Numb="8" OnClickCallback="@AddToOtvet" />
+                </div>
+                <div class="col">
+                    <NumButton Numb="9" OnClickCallback="@AddToOtvet" />
+                </div>
+            </div>
+        </div>
+        @*Кнопки*@
+
+        <div class="clearfix">&nbsp;</div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <NumButton Numb="0" OnClickCallback="@AddToOtvet" />
+                </div>
+                <div class="col-4">
+
+                    <button type="button" class="@SteretClass" @onclick="@Steret">C</button>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="clearfix">&nbsp;</div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <button type="button" class="@OtvetClass" @onclick="CheckOtvet">Ответить</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+<div class="@ModalClass" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <ZnaykaNeznayka Zval="@ZnaykaScore" Nval="@NeznaykaScore" OnClickCallback="@Rating" />
+                <br />
+                <div class="text-center">
+                    <span class="@MsgClass">@msg</span>
+                </div>
+
+               @if (ShowRating)
+               {
+                 <ListComponent Zlist="@GoodList" Nlist="@BadList" />
+               }
+
+            </div>
+
+            <div class="modal-footer">
+                @if (TimeTimer > 0)
+                {
+                    <button type="button" class="btn btn-block btn-primary" @onclick="CloseModal">Продолжить.. @TimeTimer сек</button>
+                }
+                else
+                {
+                    <SelectTabl OnChangeCallback="@GetMnojitel" CurVal="@Mnojitel" />
+                    <button type="button" class="btn btn-block btn-primary" @onclick="CloseModal">Продолжить.. </button>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+
+    List<string> GoodList = new List<string>();
+    List<string> BadList = new List<string>();
+    bool ShowRating = false;
+
+    void Rating()
+    {
+        ShowRating = !ShowRating;
+    }
+
+    string Vopros = "";
+
+    string Otvet = "";
+
+    int Reshenie = 0;
+
+    int VvedenniyOtvet = 0;
+
+    string OtvetClass = "btn btn-lg btn-block btn-info d-none";
+
+    string OtvetClassMd = "btn btn-sm btn-outline-primary d-none";
+
+    string SteretClass = "btn btn-lg btn-block btn-outline-danger d-none";
+
+    string ModalClass = "modal fade show d-block";
+
+    string MsgClass = "";
+
+    int ZnaykaScore = 0;
+    int NeznaykaScore = 0;
+
+
+    #region Select
+
+    string Mnojitel = "Все";
+
+    private void GetMnojitel(string selval)
+    {
+        Mnojitel = selval;
+        GenerateVopros();
+    }
+
+    #endregion
+
+
+    bool isGood = false;
+
+
+    #region Timer
+
+    //TimeSpan TimeLeft = new TimeSpan(0, 0, 3);
+    //string displayText = "";
+
+    int TimeTimer = 0;
+
+    bool show = false;
+
+    void Start(int sec)
+    {
+        TimeTimer = sec;
+        //TimeLeft = new TimeSpan(0, 0, 3);
+        //displayText = "Start Time";
+        show = true;
+        Timer();
+
+    }
+
+    async Task Timer()
+    {
+        //while (TimeLeft > new TimeSpan())
+        while (TimeTimer > 0)
+        {
+            await Task.Delay(1000);
+            TimeTimer--;
+            //TimeLeft = TimeLeft.Subtract(new TimeSpan(0, 0, 1));
+            StateHasChanged();
+        }
+
+
+        await AfterTime();
+        StateHasChanged();
+
+
+    }
+
+    Task AfterTime()
+    {
+        //displayText = "Time Expire";
+        //if (isGood)
+        //{
+        //    GenerateVopros();
+        //}
+        CloseModal();
+
+        //TimeLeft = new TimeSpan(0, 0, 7);
+        return Task.CompletedTask;
+    }
+    #endregion
+
+
+
+
+    //загрузка
+    protected override void OnInitialized()
+    {
+        GenerateVopros();
+    }
+
+    //добавить символ к ответу
+    private void AddToOtvet(string number)
+    {
+        Otvet += number;
+
+        ShowBtns();
+    }
+
+    //стереть символ ответа
+    private void Steret()
+    {
+
+        Otvet = "";
+        HideBtns();
+        //if (Otvet.Length > 0)
+        //{
+        //    int x = Otvet.Length - 1;
+        //    Otvet = Otvet.Remove(x);
+        //}
+
+        //if (Otvet.Length == 0)
+        //{
+        //    HideBtns();
+        //}
+
+    }
+
+    //показать кнопки ответа
+    private void ShowBtns()
+    {
+        SteretClass = "btn btn-lg btn-block btn-outline-danger";
+        OtvetClass = "btn btn-lg btn-block btn-info";
+        OtvetClassMd = "btn btn-sm btn-outline-primary";
+    }
+    //слрыть кнопки ответа
+    private void HideBtns()
+    {
+        SteretClass = "btn btn-lg btn-outline-danger d-none";
+        OtvetClass = "btn btn-lg btn-block btn-info d-none";
+        OtvetClassMd = "btn btn-sm btn-outline-primary d-none";
+    }
+
+    //сгенерировать новый вопрос
+    private void GenerateVopros()
+    {
+        Otvet = "";
+
+        HideBtns();
+
+        Random rnd = new Random();
+        int x;
+        if (Mnojitel == "Все")
+        {
+            x = rnd.Next(2, 10);
+        }
+        else
+        {
+            x = int.Parse(Mnojitel);
+        }
+        int y = rnd.Next(2, 10);
+
+        Reshenie = x * y;
+
+        Vopros = x.ToString() + " x " + y.ToString();
+    }
+
+    //сообщение
+    string msg = "";
+
+    //проверить ответ
+    private void CheckOtvet()
+    {
+        msg = "";
+
+        int otv;
+
+        bool success = int.TryParse(Otvet, out otv);
+
+        if (success)
+        {
+            if (Reshenie == otv)
+            {
+                msg = "Верно! " + Vopros + " = " + Otvet;
+
+                MsgClass = "h3 mx-auto text-success";
+
+                //GenerateVopros();
+                ZnaykaScore++;
+                GoodList.Add(Vopros + " = " + Otvet);
+
+                isGood = true;
+
+            }
+            else
+            {
+                //"<span class=\"text-success\">" "</span>"
+                msg = Otvet + " не верно.. " + Vopros + " = " + Reshenie.ToString();
+
+                MsgClass = "h4 mx-auto text-danger";
+
+                NeznaykaScore++;
+                BadList.Add(Vopros + " = " + Otvet);
+
+                isGood = false;
+                Steret();
+            }
+
+            ModalClass = "modal fade show d-block";
+
+            if (isGood)
+            {
+                Start(2);
+            }
+            else
+            {
+                Start(3);
+            }
+        }
+
+    }
+
+
+
+    //показать модальное окно счета без сообщения
+    private void ShowClearModal()
+    {
+        msg = "";
+        MsgClass = "";
+        isGood = false;
+        TimeTimer = 0;
+        ModalClass = "modal fade show d-block";
+    }
+    //скрыть модальное окно
+    private void CloseModal()
+    {
+        ModalClass = "modal fade";
+        if (isGood)
+        {
+            GenerateVopros();
+        }
+        isGood = false;
+        TimeTimer = 0;
+
+    }
+
+
+
+
+}

@@ -1,0 +1,44 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Таблица умножения</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <div class="row">
+
+        <div class="col">
+            <div class="card">
+                <img src="/neznayka/znayka.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <span class="h6 text-success">Знайка: </span>                   
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card">
+                <img src="/neznayka/neznayka.jpg" class="card-img-top" />
+                <div class="card-body">
+                    <span class="h6 text-danger">Незнайка: </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+
+    
+
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

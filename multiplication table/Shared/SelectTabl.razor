@@ -1,0 +1,31 @@
+﻿<span class="text-info">выберите множитель:</span>
+<select class="form-control" @onchange="OnSelectChange" value="@CurVal">
+    <option value="Все">Все</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    <option value="6">6</option>
+    <option value="7">7</option>
+    <option value="8">8</option>
+    <option value="9">9</option>
+</select>
+
+@code {
+
+    [Parameter]
+    public string SelectNumb { get; set; } = "Все";
+
+    [Parameter]
+    public string CurVal { get; set; } = "Все";
+
+    [Parameter]
+    public EventCallback<string> OnChangeCallback { get; set; }
+
+    void OnSelectChange(ChangeEventArgs e)
+    {
+        SelectNumb = e.Value.ToString();
+        OnChangeCallback.InvokeAsync(SelectNumb);
+    }
+
+}

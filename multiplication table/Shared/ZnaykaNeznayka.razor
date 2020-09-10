@@ -1,0 +1,34 @@
+﻿<div class="row" @onclick="@OnClickCallback">
+
+    <div class="col-6">
+        <div class="card">
+            <img src="/neznayka/znayka.jpg" class="card-img-top" />
+            <div class="card-body">
+                <span class="h6 text-success">Знайка: @Zval </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card">
+            <img src="/neznayka/neznayka.jpg" class="card-img-top" />
+            <div class="card-body">
+                <span class="h6 text-danger">Незнайка: @Nval </span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public int Zval { get; set; }
+
+    [Parameter]
+    public int Nval { get; set; }
+
+    [Parameter]
+    public EventCallback OnClickCallback { get; set; }
+
+}
